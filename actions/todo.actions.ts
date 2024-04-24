@@ -11,14 +11,17 @@ export const getTodoListAction = async () => {
 export const createTodoAction = async ({
   title,
   body,
+  completed,
 }: {
   title: string;
   body?: string | undefined;
+  completed: boolean;
 }) => {
   await prisma.todo.create({
     data: {
       title,
       body,
+      completed,
     },
   });
 };
