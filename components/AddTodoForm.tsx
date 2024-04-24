@@ -28,7 +28,11 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { createTodoAction } from "@/actions/todo.actions";
 import { Checkbox } from "@/components/ui/checkbox";
+import { useState } from "react";
+import Spinner from "./Spinner";
 const AddTodoForm = () => {
+  const [open, setOpen] = useState(false);
+  const [loading, setLoading] = useState(false);
   const defaultValues: Partial<TodoFormValues> = {
     title: "",
     body: "",
@@ -43,22 +47,26 @@ const AddTodoForm = () => {
     mode: "onChange",
   });
 
-  const onSubmit = async (data: TodoFormValues) => {
-    console.log(data);
+  const onSubmit = async ({ title, body, completed }: TodoFormValues) => {
+    setLoading(true);
     await createTodoAction({
-      title: data.title,
-      body: data.body,
-      completed: data.completed,
+      title,
+      body,
+      completed,
     });
+    setLoading(false);
+    setOpen(false);
   };
   return (
-    <Dialog>
-      <DialogTrigger asChild>
-        <Button>
-          <Plus size={14} className="mr-1" />
-          New Todo
-        </Button>
-      </DialogTrigger>
+    <Dialog open={open} onOpenChange={setOpen}>
+      <div className="flex justify-end">
+        <DialogTrigger asChild className="ml-auto">
+          <Button>
+            <Plus size={14} className="mr-1" />
+            New Todo
+          </Button>
+        </DialogTrigger>
+      </div>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
           <DialogTitle>Edit profile</DialogTitle>
@@ -121,7 +129,15 @@ const AddTodoForm = () => {
                   </FormItem>
                 )}
               />
-              <Button type="submit">Save changes</Button>
+              <Button type="submit" disabled={loading}>
+                {loading ? (
+                  <>
+                    <Spinner /> Saving
+                  </>
+                ) : (
+                  "Save"
+                )}
+              </Button>
             </form>
           </Form>
         </div>
