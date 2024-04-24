@@ -8,10 +8,12 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { Badge } from "@/components/ui/badge";
 import { Button } from "./ui/button";
 import { Pen, Trash } from "lucide-react";
+import { ITodo } from "@/interfaces";
 
-const invoices = [
+const todos = [
   {
     invoice: "INV001",
     paymentStatus: "Paid",
@@ -56,7 +58,7 @@ const invoices = [
   },
 ];
 
-export function TodoTable() {
+export function TodoTable({ todos }: { todos: ITodo[] }) {
   return (
     <Table>
       <TableCaption>A list of your recent invoices.</TableCaption>
@@ -69,17 +71,17 @@ export function TodoTable() {
         </TableRow>
       </TableHeader>
       <TableBody>
-        {invoices.map((invoice) => (
-          <TableRow key={invoice.invoice}>
-            <TableCell className="font-medium">
-              6628068e1021b136c75c9bf1
-            </TableCell>
+        {todos.map((todo) => (
+          <TableRow key={todo.id}>
+            <TableCell className="font-medium">{todo.id}</TableCell>
+            <TableCell>{todo.title}</TableCell>
             <TableCell>
-              Verumtamen spiculum surculus commodi animus celer torrens
-              strenuus. Verbera caute clamo. Voluntarius vaco iste terreo
-              provident timidus.
+              {todo.completed ? (
+                <Badge>Completed</Badge>
+              ) : (
+                <Badge variant="secondary">Uncompleted</Badge>
+              )}
             </TableCell>
-            <TableCell>Completed</TableCell>
             <TableCell className="flex items-center justify-end space-x-2">
               <Button size={"icon"}>
                 <Pen size={16} />
@@ -94,7 +96,7 @@ export function TodoTable() {
       <TableFooter>
         <TableRow>
           <TableCell colSpan={3}>Total</TableCell>
-          <TableCell className="text-right">{invoices.length}</TableCell>
+          <TableCell className="text-right">{todos.length}</TableCell>
         </TableRow>
       </TableFooter>
     </Table>
